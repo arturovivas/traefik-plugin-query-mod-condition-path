@@ -89,6 +89,12 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 }
 
 func (q *QueryModification) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+
+    if !strings.Contains(req.URL.Path, "pnl") && !strings.Contains(req.URL.Path, "PNL") {
+		q.next.ServeHTTP(rw, req)
+		return
+	}
+
 	qry := req.URL.Query()
 	switch q.config.Type {
 	case addType:
